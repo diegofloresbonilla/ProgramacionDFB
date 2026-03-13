@@ -1,0 +1,102 @@
+/*
+Actividad 1
+Alumno: Diego Flores Bonilla
+Materia: Programación
+
+Programas solicitados en:
+1. Programas de Introducción
+   - inciso vi)
+   - inciso vii)
+
+2. SeguroVidaTemporal
+   - inciso i)
+
+Referencias:
+Material visto en clase.
+Repositorio del curso.
+*/
+
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
+public class Actividad1_Codigos {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+
+        System.out.println("=== INTERÉS COMPUESTO ===");
+
+        System.out.print("Capital inicial: ");
+        double capital = scanner.nextDouble();
+
+        System.out.print("Tasa de interés anual (%): ");
+        double tasa = scanner.nextDouble();
+
+        /*
+        INCISO 1.vi)
+        Validar que los años de inversión no sean negativos
+        */
+
+        int años;
+
+        do {
+            System.out.print("Años de inversión: ");
+            años = scanner.nextInt();
+
+            if (años < 0) {
+                System.out.println("Error: debe ingresar un entero positivo.");
+            }
+
+        } while (años < 0);
+
+
+        /*
+        INCISO 1.vii)
+        Validar que la capitalización solo sea 1 o 12
+        */
+
+        int capitalizacion;
+
+        do {
+            System.out.print("Capitalización (1 = anual, 12 = mensual): ");
+            capitalizacion = scanner.nextInt();
+
+            if (capitalizacion != 1 && capitalizacion != 12) {
+                System.out.println("Error: solo se permite 1 o 12.");
+            }
+
+        } while (capitalizacion != 1 && capitalizacion != 12);
+
+
+        double tasaDecimal = tasa / 100;
+
+        double monto = capital * Math.pow(
+                1 + (tasaDecimal / capitalizacion),
+                capitalizacion * años
+        );
+
+        System.out.println("Monto final: $" + df.format(monto));
+
+        scanner.close();
+    }
+
+
+    /*
+    INCISO 2.i)
+    Método para calcular probabilidad de muerte
+    usando valores aproximados de tablas de mortalidad.
+    */
+
+    protected static double calcularProbabilidadMuerte(int edadActual) {
+
+        if (edadActual < 30) return 0.0012;
+        else if (edadActual < 40) return 0.0018;
+        else if (edadActual < 50) return 0.0027;
+        else if (edadActual < 60) return 0.0055;
+        else if (edadActual < 70) return 0.012;
+        else if (edadActual < 80) return 0.025;
+        else return 0.060;
+    }
+}
