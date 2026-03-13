@@ -1,4 +1,56 @@
-/**
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
+public class InteresCompuestoSimple {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+
+        System.out.println("=== CALCULADORA DE INTERÉS COMPUESTO ===");
+
+        System.out.print("Capital inicial: $");
+        double capital = scanner.nextDouble();
+
+        System.out.print("Tasa de interés anual (%): ");
+        double tasaAnual = scanner.nextDouble();
+
+        int años;
+        do {
+            System.out.print("Años de inversión: ");
+            años = scanner.nextInt();
+
+            if (años < 0) {
+                System.out.println("Error: debe ingresar un entero positivo.");
+            }
+        } while (años < 0);
+
+        int capitalizaciones;
+        do {
+            System.out.print("Capitalizaciones por año (1=anual, 12=mensual): ");
+            capitalizaciones = scanner.nextInt();
+
+            if (capitalizaciones != 1 && capitalizaciones != 12) {
+                System.out.println("Error: solo se permite 1 o 12.");
+            }
+        } while (capitalizaciones != 1 && capitalizaciones != 12);
+
+        double tasaDecimal = tasaAnual / 100;
+        double montoFinal = capital * Math.pow(1 +
+                (tasaDecimal / capitalizaciones),
+                capitalizaciones * años);
+
+        System.out.println("\n=== RESULTADOS ===");
+        System.out.println("Capital inicial: $" + df.format(capital));
+        System.out.println("Tasa anual: " + tasaAnual + "%");
+        System.out.println("Periodo: " + años + " años");
+        System.out.println("Capitalizaciones por año: " + capitalizaciones);
+        System.out.println("Monto final: $" + df.format(montoFinal));
+        System.out.println("Interés ganado: $" + df.format(montoFinal - capital));
+
+        scanner.close();
+    }
+}/**
  * Programa que Calcula el Interés Compuesto
  *
  * Tema:  1.3 y 1.4 Organización general de un Programa
@@ -68,4 +120,5 @@ public class InteresCompuestoSimple {
         // entrada por línea de comandos
         scanner.close();
     }
+
 }
