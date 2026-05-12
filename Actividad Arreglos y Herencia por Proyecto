@@ -1,0 +1,655 @@
+#Actividad 5 
+## Alumno
+Diego Flores Bonilla 
+
+
+PROYECTO 1: CRECIMIENTO DEL VOLUMEN DE UN TUMOR
+Archivo sugerido: tumor_euler.py
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ==============================
+# Proyecto 1:
+# Crecimiento del volumen de un tumor
+# Método de Euler hacia adelante
+# ==============================
+
+# Parámetros
+r = 4
+a = 1
+b = 4
+c = 1
+d = 1
+
+# Función g(t)
+def g(t):
+    return t**2
+
+# Intervalo de tiempo
+n = 200
+t = np.linspace(0, 2, n)
+h = t[1] - t[0]
+
+# Matriz para guardar V(t) y B(t)
+# fila 0 -> V(t)
+# fila 1 -> B(t)
+VB = np.zeros((2, n))
+
+# Condiciones iniciales
+VB[0][0] = 1   # V(0)
+VB[1][0] = 2   # B(0)
+
+# Método de Euler hacia adelante
+for i in range(n - 1):
+    V = VB[0][i]
+    B = VB[1][i]
+
+    dV = r * V * (1 - V / B)
+    dB = -a * B + b * V - c * B * (V ** (2/3)) - d * B * g(t[i])
+
+    VB[0][i + 1] = V + h * dV
+    VB[1][i + 1] = B + h * dB
+
+# Gráfica de V(t) y B(t) en el mismo frame
+plt.plot(t, VB[0], label="V(t) Volumen del tumor")
+plt.plot(t, VB[1], label="B(t) Densidad de vasos sanguíneos")
+
+plt.title("Crecimiento del volumen de un tumor")
+plt.xlabel("Tiempo t")
+plt.ylabel("V(t) y B(t)")
+plt.legend()
+plt.grid()
+plt.show()
+
+
+============================================================
+PROYECTO 2: ESTEGANOGRAFÍA
+Archivo sugerido: funcionEsteganografia.js
+============================================================
+
+function hideMessage(){
+  var x,y, aCIb=[], aCIh=[];
+  var hidePix, stegoPix;
+  var nr, ng , nb;
+  var hScreen = document.getElementById("hideS");
+
+  if( coverImg === null || !coverImg.complete()){
+    alert("Image bluff not loaded");
+    return;
+  }
+
+  if( hideImg === null || !hideImg.complete()){
+    alert("Image to hide not loaded");
+    return;
+  }
+
+  if(!matchImage()){
+    alert("cover image must be in size, equal or more larger that the image to hide");
+    return;
+  }
+
+  stegoImg = new SimpleImage(coverImg.getWidth(), coverImg.getHeight());
+
+  for(var coverPix of coverImg.values()){
+    x = coverPix.getX();
+    y = coverPix.getY();
+
+    hidePix = hideImg.getPixel(x,y);
+
+    aCIb = getSignificantCover(coverPix);
+    aCIh = getSignificantHide(hidePix);
+
+    stegoPix = stegoImg.getPixel(x,y);
+
+    nr = aCIb[0]*32 + aCIh[0];
+    ng = aCIb[1]*32 + aCIh[1];
+    nb = aCIb[2]*32 + aCIh[2];
+
+    stegoPix.setRed(nr);
+    stegoPix.setGreen(ng);
+    stegoPix.setBlue(nb);
+  }
+
+  stegoImg.drawTo(hScreen);
+}
+
+function getSignificantCover(pixel){
+  var r,g,b, arraySigColor;
+
+  r = pixel.getRed();
+  g = pixel.getGreen();
+  b = pixel.getBlue();
+
+  r = Math.floor(r/32);
+  g = Math.floor(g/32);
+  b = Math.floor(b/32);
+
+  arraySigColor = [r,g,b];
+  return arraySigColor;
+}
+
+function getSignificantHide(pixel){
+  var r,g,b, arraySigColor;
+
+  r = pixel.getRed();
+  g = pixel.getGreen();
+  b = pixel.getBlue();
+
+  r = Math.floor(r/8);
+  g = Math.floor(g/8);
+  b = Math.floor(b/8);
+
+  arraySigColor = [r,g,b];
+  return arraySigColor;
+}
+
+function getMessage(){
+  var nr, ng , nb;
+  var hScreen = document.getElementById("hideS");
+
+  if( stegoImg === null || !stegoImg.complete()){
+    alert("Not hide message finded");
+    return;
+  }
+
+  for(var stegoPix of stegoImg.values()){
+    nr = stegoPix.getRed();
+    ng = stegoPix.getGreen();
+    nb = stegoPix.getBlue();
+
+    nr = (nr % 32) * 8;
+    ng = (ng % 32) * 8;
+    nb = (nb % 32) * 8;
+
+    stegoPix.setRed(nr);
+    stegoPix.setGreen(ng);
+    stegoPix.setBlue(nb);
+  }
+
+  stegoImg.drawTo(hScreen);
+}
+
+
+============================================================
+PROYECTO 3: HERENCIA Y POLIMORFISMO
+Archivo: Item.java
+============================================================
+
+public class Item {
+
+    protected double value;
+    protected boolean Condicion = true;
+    private String creator;
+    private int inventario;
+    private String codigo;
+
+    public Item(double value, String creator) {
+        this.value = value;
+        this.creator = creator;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public int getInventario() {
+        return inventario;
+    }
+
+    public boolean getCondicion() {
+        return Condicion;
+    }
+
+    public void setCondicion(boolean Condicion) {
+        this.Condicion = Condicion;
+    }
+
+    public double valorReal() {
+        double valorActual = value;
+
+        if (!Condicion) {
+            valorActual = value * 0.8;
+        }
+
+        return valorActual;
+    }
+
+    @Override
+    public String toString() {
+        return "Valor original: $" + value +
+               "\nCreador: " + creator +
+               "\nCondición: " + Condicion +
+               "\nValor real: $" + valorReal();
+    }
+}
+
+
+============================================================
+PROYECTO 3: HERENCIA Y POLIMORFISMO
+Archivo: Florero.java
+============================================================
+
+public class Florero extends Item {
+
+    private int capacity;
+    private String material;
+
+    public Florero(double value, String creator,
+                   int capacity, String material) {
+        super(value, creator);
+        this.capacity = capacity;
+        this.material = material;
+    }
+
+    @Override
+    public double valorReal() {
+        double valorActual = value;
+
+        if (!Condicion) {
+            valorActual = value * 0.9;
+        }
+
+        return valorActual;
+    }
+
+    @Override
+    public String toString() {
+        return "Florero" +
+               "\nValor original: $" + value +
+               "\nCreador: " + getCreator() +
+               "\nCondición: " + Condicion +
+               "\nCapacidad: " + capacity +
+               "\nMaterial: " + material +
+               "\nValor real: $" + valorReal();
+    }
+}
+
+
+============================================================
+PROYECTO 3: HERENCIA Y POLIMORFISMO
+Archivo: Silla.java
+============================================================
+
+public class Silla extends Item {
+
+    private String material;
+    private int numeroPatas;
+
+    public Silla(double value, String creator,
+                 String material, int numeroPatas) {
+        super(value, creator);
+        this.material = material;
+        this.numeroPatas = numeroPatas;
+    }
+
+    @Override
+    public double valorReal() {
+        double valorActual = value;
+
+        if (!Condicion) {
+            valorActual = value * 0.75;
+        }
+
+        return valorActual;
+    }
+
+    @Override
+    public String toString() {
+        return "Silla" +
+               "\nValor original: $" + value +
+               "\nCreador: " + getCreator() +
+               "\nCondición: " + Condicion +
+               "\nMaterial: " + material +
+               "\nNúmero de patas: " + numeroPatas +
+               "\nValor real: $" + valorReal();
+    }
+}
+
+
+============================================================
+PROYECTO 3: HERENCIA Y POLIMORFISMO
+Archivo: Balon.java
+============================================================
+
+public class Balon extends Item {
+
+    private String deporte;
+    private String tamanio;
+
+    public Balon(double value, String creator,
+                 String deporte, String tamanio) {
+        super(value, creator);
+        this.deporte = deporte;
+        this.tamanio = tamanio;
+    }
+
+    @Override
+    public double valorReal() {
+        double valorActual = value;
+
+        if (!Condicion) {
+            valorActual = value * 0.6;
+        }
+
+        return valorActual;
+    }
+
+    @Override
+    public String toString() {
+        return "Balón" +
+               "\nValor original: $" + value +
+               "\nCreador: " + getCreator() +
+               "\nCondición: " + Condicion +
+               "\nDeporte: " + deporte +
+               "\nTamaño: " + tamanio +
+               "\nValor real: $" + valorReal();
+    }
+}
+
+
+============================================================
+PROYECTO 3: HERENCIA Y POLIMORFISMO
+Archivo: UsaItemFlorero.java
+============================================================
+
+void main() {
+
+    Item miFlorero =
+            new Florero(1938.50, "Leonardo", 1,
+                        "Vidrio soplado");
+
+    Item miSilla =
+            new Silla(850.00, "Carpintero local",
+                      "Madera", 4);
+
+    Item miBalon =
+            new Balon(499.90, "Adidas",
+                      "Fútbol", "Mediano");
+
+    miFlorero.setCondicion(false);
+    miSilla.setCondicion(true);
+    miBalon.setCondicion(false);
+
+    IO.println("Las características de mi florero son:");
+    IO.println(miFlorero);
+
+    IO.println("\nLas características de mi silla son:");
+    IO.println(miSilla);
+
+    IO.println("\nLas características de mi balón son:");
+    IO.println(miBalon);
+}
+
+
+============================================================
+PROYECTO 4: HERENCIA ENTORNO GRÁFICO
+Archivo: Cuadrado_Swing.java
+============================================================
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Cuadrado_Swing extends JFrame {
+
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        // Cuadrado original
+        g.setColor(Color.RED);
+        g.fillRect(50, 50, 200, 200);
+
+        // Rectángulo borrado dentro del cuadrado
+        g.clearRect(100, 100, 100, 100);
+
+        // 1. Elipse
+        g.setColor(Color.BLUE);
+        g.drawOval(280, 70, 150, 80);
+
+        // 2. Arco
+        g.setColor(Color.GREEN);
+        g.drawArc(280, 180, 150, 100, 0, 180);
+
+        // 3. Triángulo
+        g.setColor(Color.MAGENTA);
+        int[] xPoints = {120, 60, 180};
+        int[] yPoints = {320, 420, 420};
+        g.drawPolygon(xPoints, yPoints, 3);
+    }
+}
+
+
+============================================================
+PROYECTO 4: HERENCIA ENTORNO GRÁFICO
+Archivo: Crea_Cuadrado_Swing.java
+============================================================
+
+import javax.swing.*;
+
+void main() {
+    JFrame frame = new Cuadrado_Swing();
+
+    frame.setSize(500, 500);
+    frame.setTitle("Contorno Cuadrado");
+
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+    frame.setLocationRelativeTo(null);
+
+    frame.setVisible(true);
+}
+
+
+============================================================
+PROYECTO 5: FRACTAL ÁRBOL DE PITÁGORAS
+Archivo: calcula_Puntos_Fractal_Pitagoras_GUI.py
+============================================================
+
+# -*- coding: utf-8 -*-
+
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import font
+
+def obtener_datos():
+    try:
+        x1 = float(entry_x1.get())
+        y1 = float(entry_y1.get())
+        x2 = float(entry_x2.get())
+        y2 = float(entry_y2.get())
+
+        if x1 and y1 and x2 and y2:
+
+            dx = x1 - x2
+            dy = y1 - y2
+
+            x3 = x1 - dy
+            y3 = y1 + dx
+
+            x4 = x2 - dy
+            y4 = y2 + dx
+
+            messagebox.showwarning(
+                "Puntos calculados",
+                f"x3 = {x3}, y3 = {y3}\n"
+                f"x4 = {x4}, y4 = {y4}"
+            )
+
+    except ValueError:
+        messagebox.showwarning(
+            "Campos vacíos",
+            "Por favor complételos"
+        )
+
+# Crear ventana
+ventana = tk.Tk()
+
+ventana.title("Ingreso de Puntos Base del Fractal")
+ventana.geometry("300x300")
+
+myEstilo = font.Font(
+    family="Comic Sans MS",
+    size=13,
+    weight="bold"
+)
+
+# Etiquetas y campos
+
+tk.Label(
+    ventana,
+    font=myEstilo,
+    text="x1:"
+).pack(pady=1)
+
+entry_x1 = tk.Entry(ventana)
+entry_x1.pack(pady=1)
+
+tk.Label(
+    ventana,
+    font=myEstilo,
+    text="y1:"
+).pack(pady=1)
+
+entry_y1 = tk.Entry(ventana)
+entry_y1.pack(pady=1)
+
+tk.Label(
+    ventana,
+    font=myEstilo,
+    text="x2:"
+).pack(pady=1)
+
+entry_x2 = tk.Entry(ventana)
+entry_x2.pack(pady=1)
+
+tk.Label(
+    ventana,
+    font=myEstilo,
+    text="y2:"
+).pack(pady=1)
+
+entry_y2 = tk.Entry(ventana)
+entry_y2.pack(pady=1)
+
+# Botón
+tk.Button(
+    ventana,
+    font=('Helvetica', '13', "bold"),
+    text="Enviar",
+    command=obtener_datos
+).pack(pady=20)
+
+ventana.mainloop()
+
+
+============================================================
+PROYECTO 5: FRACTAL ÁRBOL DE PITÁGORAS
+Archivo: ArbolDePitagorasGeneral.java
+============================================================
+
+import javax.swing.*;
+import java.awt.*;
+
+public class ArbolDePitagorasGeneral extends JFrame {
+
+    double theta;
+
+    public ArbolDePitagorasGeneral(double theta) {
+        this.theta = Math.toRadians(theta);
+    }
+
+    public void paint(Graphics g) {
+
+        g.clearRect(0, 0, 500, 500);
+
+        paintTree(g, 210, 400, 290, 400);
+    }
+
+    void paintTree(Graphics g,
+                   double x1, double y1,
+                   double x2, double y2) {
+
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+
+        if(dx * dx + dy * dy > 10){
+
+            double x3 = x1 - dy;
+            double y3 = y1 + dx;
+
+            double x4 = x2 - dy;
+            double y4 = y2 + dx;
+
+            // Vector superior del cuadrado
+            double vx = x4 - x3;
+            double vy = y4 - y3;
+
+            // Rotación por ángulo theta
+            double x5 = x3 +
+                        vx * Math.cos(theta) -
+                        vy * Math.sin(theta);
+
+            double y5 = y3 +
+                        vx * Math.sin(theta) +
+                        vy * Math.cos(theta);
+
+            // Dibujar cuadrado
+            g.drawLine((int)x1, (int)y1,
+                       (int)x2, (int)y2);
+
+            g.drawLine((int)x2, (int)y2,
+                       (int)x4, (int)y4);
+
+            g.drawLine((int)x4, (int)y4,
+                       (int)x3, (int)y3);
+
+            g.drawLine((int)x3, (int)y3,
+                       (int)x1, (int)y1);
+
+            // Recursividad
+            paintTree(g, x3, y3, x5, y5);
+            paintTree(g, x5, y5, x4, y4);
+        }
+    }
+}
+
+
+============================================================
+PROYECTO 5: FRACTAL ÁRBOL DE PITÁGORAS
+Archivo: CreaArbolGeneral.java
+============================================================
+
+import javax.swing.*;
+import javax.swing.JOptionPane;
+
+void main() {
+
+    String entrada =
+            JOptionPane.showInputDialog(
+                    "Introduce un ángulo entre 0 y 90");
+
+    double theta = Double.parseDouble(entrada);
+
+    JFrame frame =
+            new ArbolDePitagorasGeneral(theta);
+
+    frame.setSize(500, 500);
+
+    frame.setTitle(
+            "Fractal Árbol de Pitágoras");
+
+    frame.setDefaultCloseOperation(
+            WindowConstants.EXIT_ON_CLOSE);
+
+    frame.setLocationRelativeTo(null);
+
+    frame.setVisible(true);
+}
